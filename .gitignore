@@ -1,0 +1,27 @@
+/research_project
+/solar-thermal-pipeline/.env
+/solar-thermal-pipeline/data
+/solar-thermal-pipeline/logs
+/solar-thermal-pipeline/solar_dataset
+
+#checkpoints
+/checkpoints
+
+#data
+/perovskite_segment/data
+
+/wandb
+
+#yolo models
+/yolov8n-seg.pt
+/CV
+/runs
+
+#venv
+/research_project
+
+/import cv2.py
+/kmeans.py
+/segment_panel.py
+
+/outputs

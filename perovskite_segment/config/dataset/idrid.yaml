@@ -1,0 +1,12 @@
+name: IDRID
+path: /home/RUS_CIP/st178893/clahe_processed
+batch_size: 32
+image_size: 256
+aug_rot_angle: 15
+
+#Ben Graham preprocessing
+sigmaX: 2
+alpha: 1.2
+beta: -0.7
+gamma: 10
+

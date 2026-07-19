@@ -1,0 +1,22 @@
+defaults:
+  - dataset: solarpark
+  - model: unet
+  - _self_
+# Training
+epochs: 10
+finetune_epochs: 5
+lr: 1e-5
+# Logging
+log_interval: 10
+eval_interval: 1
+weight_decay: 1e-5 #new
+use_scheduler: True
+grad_clip: 1.0
+checkpoint_dir: checkpoints
+checkpoint_path: checkpoints/ckpt_final_epoch52.pt
+train_mode: pretrain
+seed: 42
+ensemble_mode: False
+checkpoint_paths: []
+image_path: /Users/justicealuu/research_project/perovskite_segment/thermal_20260707_123134.jpg
+
