@@ -22,14 +22,16 @@ def visualize_predictions(cfg,
             images = images.to(device)
 
             outputs = model(images)
-            if cfg.model.name == "deeplabv3_resnet50":
-                preds = outputs["out"]
-            else:
-                if isinstance(outputs, (tuple, list)):
-                    preds = torch.sigmoid(outputs[0])
-                else:
-                    preds = torch.sigmoid(outputs[0])
-            preds = (preds > 0.5).float()
+            outputs = model(images)
+
+            if isinstance(outputs, dict):          # DeepLabV3
+                outputs = outputs["out"]
+
+            elif isinstance(outputs, (tuple, list)):   # U²-Net
+                outputs = outputs[0]
+
+            # U-Net
+            preds = (torch.sigmoid(outputs) > 0.5).float()
 
             batch_size = images.size(0)
 

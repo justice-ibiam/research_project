@@ -95,7 +95,7 @@ class Trainer:
 
         path = os.path.join(
             self.checkpoint_dir,
-            f"unet_{tag}.pt",
+            f"{self.cfg.model.name}_{tag}.pt",
         )
 
         torch.save(
@@ -144,8 +144,6 @@ class Trainer:
             images
         )
 
-        outputs = self.model(images)
-
         if self.cfg.model.name == "deeplabv3_resnet50":
 
             prediction = outputs["out"]
@@ -157,7 +155,7 @@ class Trainer:
         else:
 
             if isinstance(outputs, (tuple, list)):
-                # U²-Net
+                # U2-Net
                 loss = torch.stack([
                     self.criterion(pred, masks)
                     for pred in outputs

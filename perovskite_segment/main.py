@@ -42,13 +42,13 @@ def main(cfg):
     # datasets
 
 
-    train_dataset, train_dataloader = get_dataset(
+    _, train_dataloader = get_dataset(
         cfg,
         split="train"
     )
 
 
-    val_dataset, val_dataloader = get_dataset(
+    _, val_dataloader = get_dataset(
         cfg,
         split="valid"
     )
