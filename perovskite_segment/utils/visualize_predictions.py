@@ -1,7 +1,8 @@
 import torch
 import numpy as np 
 import matplotlib.pyplot as plt
-from utils.perspective_rectification import find_panel_contour, get_panel_corners, order_points, rectify_image, remove_background
+from utils.perspective_rectification import  rectify_image, visualize_rectified, remove_background
+import cv2
 
 
 def visualize_predictions(cfg,
@@ -47,46 +48,10 @@ def visualize_predictions(cfg,
 
                 # Perspective rectification
                 foreground, mask = remove_background( image, pred ) 
-                # pred = (pred * 255).astype(np.uint8)
-                contour = find_panel_contour(mask)
-                corners= get_panel_corners(contour)
-                corners = order_points(corners)
-                rectified = rectify_image(foreground, corners)
+
+                rectified = rectify_image(foreground, mask)
+
+                visualize_rectified(cfg, image, pred, gt, rectified, num_images, count)
 
 
-
-                fig, ax = plt.subplots(
-                    1,
-                    4,
-                    figsize=(16,4)
-                )
-
-                ax[0].imshow(image)
-                ax[0].set_title("Thermal Image")
-                ax[0].axis("off")
-
-                ax[1].imshow(gt, cmap="gray")
-                ax[1].set_title("Ground Truth")
-                ax[1].axis("off")
-
-                ax[2].imshow(pred, cmap="gray")
-                ax[2].set_title("Prediction")
-                ax[2].axis("off")
-
-                print(type(rectified))
-
-                if rectified is not None:
-                    print(rectified.dtype)
-                    print(rectified.shape)
-
-                ax[3].imshow(rectified, cmap="gray")
-                ax[3].set_title("Rectified")
-                ax[3].axis("off")
-
-                plt.tight_layout()
-                plt.show()
-
-                count += 1
-
-                if count >= num_images:
-                    return
+ 
