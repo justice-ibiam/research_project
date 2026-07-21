@@ -73,18 +73,27 @@ def order_points(pts):
 
 def rectify_image(image,
                   corners,
-                  width=320,
-                  height=240):
+                #   width=320,
+                #   height=240
+                  ):
 
     # corners = order_points(corners)
     print(image.shape)
     print("Corners inside rectify_image:")
     print(corners)
+
+    widthA = np.linalg.norm(corners[2] - corners[3])
+    widthB = np.linalg.norm(corners[1] - corners[0])
+    width = int(max(widthA, widthB))
+
+    heightA = np.linalg.norm(corners[1] - corners[2])
+    heightB = np.linalg.norm(corners[0] - corners[3])
+    height = int(max(heightA, heightB))
     destination = np.array([
-        [0,0],
-        [width-1,0],
-        [width-1,height-1],
-        [0,height-1]
+        [0, 0],
+        [width - 1, 0],
+        [width - 1, height - 1],
+        [0, height - 1]
     ], dtype=np.float32)
 
     M = cv2.getPerspectiveTransform(
@@ -98,16 +107,70 @@ def rectify_image(image,
         (width,height)
     )
 
-    import matplotlib.pyplot as plt
+    return rectified
 
-    plt.figure(figsize=(12,5))
+import cv2
+import numpy as np
 
-    plt.subplot(121)
-    plt.imshow(image)
-    plt.title("Original")
+def remove_background(image, mask,
+                      kernel_size=5,
+                      dilation_iters=1):
+    """
+    Remove the background using a predicted segmentation mask.
 
-    plt.subplot(122)
-    plt.imshow(rectified)
-    plt.title("Rectified")
+    Parameters
+    image : np.ndarray
+        Original grayscale or RGB image.
 
-    plt.show()
+    mask : np.ndarray
+        Predicted binary mask (0/255 or probabilities).
+
+    kernel_size : int
+        Size of dilation kernel.
+
+    dilation_iters : int
+        Number of dilation iterations.
+
+    Returns
+    foreground : np.ndarray
+        Image with the background removed.
+
+    clean_mask : np.ndarray
+        Processed binary mask.
+    """
+
+    # Convert to binary mask
+    if mask.dtype != np.uint8:
+        mask = (mask > 0.5).astype(np.uint8) * 255
+
+    _, mask = cv2.threshold(mask, 127, 255, cv2.THRESH_BINARY)
+
+
+    # Keep only largest component
+    num_labels, labels, stats, _ = cv2.connectedComponentsWithStats(mask)
+
+    clean_mask = np.zeros_like(mask)
+
+    if num_labels > 1:
+        largest = 1 + np.argmax(stats[1:, cv2.CC_STAT_AREA])
+        clean_mask[labels == largest] = 255
+
+    # Dilate slightly to preserve borders
+    kernel = cv2.getStructuringElement(
+        cv2.MORPH_ELLIPSE,
+        (kernel_size, kernel_size)
+    )
+
+    clean_mask = cv2.dilate(
+        clean_mask,
+        kernel,
+        iterations=dilation_iters
+    )
+
+    # Apply mask
+    if image.ndim == 2:
+        foreground = cv2.bitwise_and(image, image, mask=clean_mask)
+    else:
+        foreground = cv2.bitwise_and(image, image, mask=clean_mask)
+
+    return foreground, clean_mask

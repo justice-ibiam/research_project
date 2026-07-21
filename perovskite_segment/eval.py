@@ -74,6 +74,8 @@ def main(cfg):
         num_images=71
     )
 
+    
+
 
 if __name__ == "__main__":
     main()

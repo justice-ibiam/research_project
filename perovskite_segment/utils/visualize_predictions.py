@@ -1,5 +1,7 @@
 import torch
+import numpy as np 
 import matplotlib.pyplot as plt
+from utils.perspective_rectification import find_panel_contour, get_panel_corners, order_points, rectify_image, remove_background
 
 
 def visualize_predictions(cfg,
@@ -43,10 +45,20 @@ def visualize_predictions(cfg,
 
                 pred = preds[i].cpu().squeeze().numpy()
 
+                # Perspective rectification
+                foreground, mask = remove_background( image, pred ) 
+                # pred = (pred * 255).astype(np.uint8)
+                contour = find_panel_contour(mask)
+                corners= get_panel_corners(contour)
+                corners = order_points(corners)
+                rectified = rectify_image(foreground, corners)
+
+
+
                 fig, ax = plt.subplots(
                     1,
-                    3,
-                    figsize=(15,5)
+                    4,
+                    figsize=(16,4)
                 )
 
                 ax[0].imshow(image)
@@ -60,6 +72,16 @@ def visualize_predictions(cfg,
                 ax[2].imshow(pred, cmap="gray")
                 ax[2].set_title("Prediction")
                 ax[2].axis("off")
+
+                print(type(rectified))
+
+                if rectified is not None:
+                    print(rectified.dtype)
+                    print(rectified.shape)
+
+                ax[3].imshow(rectified, cmap="gray")
+                ax[3].set_title("Rectified")
+                ax[3].axis("off")
 
                 plt.tight_layout()
                 plt.show()
