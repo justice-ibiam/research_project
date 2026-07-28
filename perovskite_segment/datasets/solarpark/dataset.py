@@ -40,23 +40,23 @@ class SolarPark(Dataset):
         # self.transform = transform
         if self.split=="train":
             self.transform = A.Compose([
-                A.HorizontalFlip(p=0.5),
+                # A.HorizontalFlip(p=0.5),
 
-                A.Rotate(limit=10, p=0.5),
+                # A.Rotate(limit=10, p=0.5),
 
-                A.ShiftScaleRotate(
-                    shift_limit=0.05,
-                    scale_limit=0.05,
-                    rotate_limit=10,
-                    border_mode=cv2.BORDER_CONSTANT,
-                    p=0.5,
-                ),
+                # A.ShiftScaleRotate(
+                #     shift_limit=0.05,
+                #     scale_limit=0.05,
+                #     rotate_limit=10,
+                #     border_mode=cv2.BORDER_CONSTANT,
+                #     p=0.5,
+                # ),
 
-                A.RandomBrightnessContrast(
-                    brightness_limit=0.15,
-                    contrast_limit=0.15,
-                    p=0.3,
-                ),
+                # A.RandomBrightnessContrast(
+                #     brightness_limit=0.15,
+                #     contrast_limit=0.15,
+                #     p=0.3,
+                # ),
 
                 A.Normalize(
                     mean=self.mean,
@@ -134,16 +134,6 @@ class SolarPark(Dataset):
             mask = augmented["mask"]
             if mask.ndim == 2:
                 mask = mask.unsqueeze(0)
-        # image = image / 255.0
 
-
-        
-
-
-
-        # mask = mask.unsqueeze(0)
-
-        # print(image.shape)
-        # print(mask.shape)
 
         return image, mask

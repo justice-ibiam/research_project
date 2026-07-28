@@ -1,0 +1,17 @@
+name: solarparkcells
+path: /Users/justicealuu/research_project/data/solarparkcells
+batch_size: 16
+num_classes: 13
+
+
+# Normalization Statistics
+
+mean:
+  - 0.78825041
+  - 0.3565332
+  - 0.2667081
+
+std:
+  - 0.25891912
+  - 0.31241968
+  - 0.24355275
