@@ -9,7 +9,7 @@ try:
     name=None,
 )
 
-    USE_WANDB = True
+    USE_WANDB = False
 
 except ImportError:
 
@@ -95,7 +95,7 @@ class Trainer:
 
         path = os.path.join(
             self.checkpoint_dir,
-            f"{self.cfg.model.name}_{tag}.pt",
+            f"{self.cfg.model.name}_multiclass_{tag}.pt",
         )
 
         torch.save(

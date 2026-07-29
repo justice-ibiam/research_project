@@ -52,9 +52,10 @@ class Evaluator:
 
             outputs = self.model(images)
 
-            # ------------------------------------------
+            
+
             # Handle different model outputs
-            # ------------------------------------------
+
 
             if self.cfg.model.name == "deeplabv3_resnet50":
 
