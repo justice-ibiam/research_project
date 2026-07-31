@@ -21,7 +21,8 @@ def get_model(cfg):
     elif cfg.model.name == "u2net":
         return U2NET(
             in_ch=3,
-            out_ch=cfg.dataset.num_classes,
+            # out_ch=cfg.dataset.num_classes,
+            out_ch=13,
         )
     elif cfg.model.name == 'deeplabv3_resnet50':
         model = deeplabv3_resnet50(

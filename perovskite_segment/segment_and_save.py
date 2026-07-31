@@ -60,100 +60,88 @@ def save_segmented_panels(cfg):
 
     with torch.no_grad():
 
-        for idx, (image, _) in enumerate(tqdm(dataloader)):
 
-            image = image.to(device)
 
-            outputs = model(image)
+        image = image.to(device)
 
-            if cfg.model.name == "deeplabv3_resnet50":
-                pred = outputs["out"]
+        output = model(image)
 
-            elif isinstance(outputs, (tuple, list)):
-                pred = outputs[0]
+        if cfg.model.name == "deeplabv3_resnet50":
+            pred = output["out"]
 
-            else:
-                pred = outputs
+        elif isinstance(output, (tuple, list)):
+            pred = output[0]
 
-            pred = torch.sigmoid(pred)
+        else:
+            pred = output
 
-            pred = (
-                pred > 0.5
-            ).float()
+        pred = torch.sigmoid(pred)
 
-            ##################################################
-            # Convert image back to numpy
-            ##################################################
+        pred = (
+            pred > 0.5
+        ).float()
 
-            img = image[0].cpu().permute(1, 2, 0).numpy()
+        # Convert image back to numpy
 
-            img = (
-                img
-                * np.array(cfg.dataset.std)
-                + np.array(cfg.dataset.mean)
-            )
+        img = image[0].cpu().permute(1, 2, 0).numpy()
 
-            img = np.clip(
-                img,
-                0,
-                1,
-            )
+        img = (
+            img
+            * np.array(cfg.dataset.std)
+            + np.array(cfg.dataset.mean)
+        )
 
-            img = (
-                img * 255
-            ).astype(np.uint8)
+        img = np.clip(
+            img,
+            0,
+            1,
+        )
 
-            img = cv2.cvtColor(
-                img,
-                cv2.COLOR_RGB2BGR,
-            )
+        img = (
+            img * 255
+        ).astype(np.uint8)
 
-            ##################################################
-            # Convert prediction to uint8 mask
-            ##################################################
+        img = cv2.cvtColor(
+            img,
+            cv2.COLOR_RGB2BGR,
+        )
 
-            mask = (
-                pred[0]
-                .cpu()
-                .squeeze()
-                .numpy()
-                * 255
-            ).astype(np.uint8)
+        # Convert prediction to uint8 mask
 
-            ##################################################
-            # Remove background
-            ##################################################
+        mask = (
+            pred[0]
+            .cpu()
+            .squeeze()
+            .numpy()
+            * 255
+        ).astype(np.uint8)
 
-            foreground, clean_mask = remove_background(
-                img,
-                mask,
-            )
+        # Remove background
 
-            ##################################################
-            # Perspective rectification
-            ##################################################
+        foreground, clean_mask = remove_background(
+            img,
+            mask,
+        )
 
-            rectified = rectify_image(
-                foreground,
-                clean_mask,
-            )
+        # Perspective rectification
 
-            if rectified is None:
-                continue
+        rectified = rectify_image(
+            foreground,
+            clean_mask,
+        )
 
-            ##################################################
-            # Save image
-            ##################################################
 
-            filename = (
-                save_dir
-                / f"{idx:05d}.png"
-            )
+        # Save image
 
-            cv2.imwrite(
-                str(filename),
-                rectified,
-            )
+        filename = (
+            save_dir
+            / f"testing.png"
+        )
+
+        cv2.imwrite(
+            str(filename),
+            rectified,
+        )
 
     print("Finished!")
 

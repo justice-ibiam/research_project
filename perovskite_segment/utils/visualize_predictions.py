@@ -1,7 +1,11 @@
 import torch
 import numpy as np 
 import matplotlib.pyplot as plt
-from utils.perspective_rectification import  rectify_image, visualize_rectified, remove_background
+from .perspective_rectification import (
+    rectify_image,
+    visualize_rectified,
+    remove_background,
+)
 import cv2
 
 

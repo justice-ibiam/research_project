@@ -139,7 +139,7 @@ def rectify_image(foreground, mask):
     return rect_rgba
 
 def visualize_rectified( cfg, image, pred, gt, rectified, num_images, count):
-
+    print("I'm here")
     fig, ax = plt.subplots(
         1,
         4,

@@ -1,9 +1,8 @@
-name: solarpark
-path: /Users/justicealuu/research_project/data/solarpark
+name: solarparkcells
+path: /Users/justicealuu/research_project/data/solarparkcells
 batch_size: 16
-image_size: 256
-aug_rot_angle: 15
-num_classes: 1
+num_classes: 13
+
 
 # Normalization Statistics
 
